@@ -1,0 +1,9 @@
+<resources>
+    <style name="Theme.PetCare" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#236459</item>
+        <item name="colorPrimaryVariant">#16473F</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSecondary">#236459</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
+    </style>
+</resources>
