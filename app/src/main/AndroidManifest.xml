@@ -3,7 +3,11 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <application android:allowBackup="false" android:label="@string/app_name"
         android:icon="@drawable/ic_pet_notification" android:supportsRtl="true"
-        android:theme="@style/Theme.PetCare">
+        android:theme="@style/Theme.PetCare.M2">
+        <activity android:name=".ui.AnimalListActivity" android:exported="false"
+            android:label="@string/animals_title" android:parentActivityName=".MainActivity" />
+        <activity android:name=".ui.AboutActivity" android:exported="false"
+            android:label="@string/about_title" android:parentActivityName=".MainActivity" />
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

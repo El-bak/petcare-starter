@@ -1,0 +1,26 @@
+<resources>
+    <string name="animals_title">Animaux</string>
+    <string name="about_title">À propos de PetCare</string>
+    <string name="home_title">Carnet de soins</string>
+    <string name="drawer_open">Ouvrir la navigation</string>
+    <string name="drawer_close">Fermer la navigation</string>
+    <string name="drawer_header">PetCare · Carnet de soins</string>
+    <string name="about_description">PetCare est un carnet pédagogique pour animaux. Les données sont fictives et restent locales. Les soins sont conservés pendant la session, pas dans une base de données.</string>
+    <string name="close_page">Retour au carnet</string>
+    <string name="show_animal_info">Afficher les informations de cet animal</string>
+    <string name="animal_info_description">Afficher les informations de %1$s</string>
+    <string name="animal_information">Animal : %1$s
+Espèce : %2$s</string>
+    <string name="progress_value">%1$d / %2$d</string>
+    <string name="care_progress_description">Soins confirmés : %1$d. Objectif de session : %2$d.</string>
+    <string name="progress_pending">Indicateur de soins à compléter dans le module M2.</string>
+    <string name="m2_pending">Exercice M2 %1$d : fonction à compléter.</string>
+    <string name="list_empty">Aucun animal à afficher.</string>
+    <string name="list_pending">La liste paginée est à connecter dans le module M2.</string>
+    <string name="list_error">Le chargement a échoué. Vous pouvez réessayer.</string>
+    <string name="retry">Réessayer</string>
+    <string name="row_pending">Ligne à compléter</string>
+    <string name="m2_notice">Démonstration locale. Les soins restent des données de session.</string>
+    <string name="about_pending">Écran À propos à compléter dans le module M2.</string>
+    <string name="progress_pending_short">À compléter</string>
+</resources>

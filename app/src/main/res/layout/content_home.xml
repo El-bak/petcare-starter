@@ -1,0 +1,49 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/homeRoot"
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="16dp" app:layout_optimizationLevel="none">
+    <TextView android:id="@+id/animalText" android:layout_width="0dp" android:layout_height="wrap_content" android:textSize="24sp"
+        app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toStartOf="@id/animalInfoButton" />
+    <ImageButton android:id="@+id/animalInfoButton" android:layout_width="48dp" android:layout_height="48dp"
+        android:src="@android:drawable/ic_menu_info_details" android:background="?attr/selectableItemBackgroundBorderless" app:tint="?attr/colorOnSurface"
+        android:contentDescription="@string/show_animal_info"
+        app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent" />
+    <androidx.constraintlayout.widget.Barrier android:id="@+id/animalHeaderBottom" android:layout_width="wrap_content" android:layout_height="wrap_content"
+        app:barrierDirection="bottom" app:constraint_referenced_ids="animalText,animalInfoButton" />
+    <TextView android:id="@+id/countText" android:layout_width="0dp" android:layout_height="wrap_content" android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/animalHeaderBottom" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" />
+    <com.example.petcare.ui.CareProgressView android:id="@+id/careProgress"
+        android:layout_width="0dp" android:layout_height="140dp" android:layout_marginTop="8dp"
+        android:contentDescription="@string/progress_pending" android:focusable="true"
+        app:layout_constraintTop_toBottomOf="@id/countText" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" />
+    <Button android:id="@+id/nextButton" android:layout_width="0dp" android:layout_height="wrap_content" android:minHeight="48dp"
+        android:text="@string/next_animal" app:layout_constraintTop_toBottomOf="@id/careProgress"
+        app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" />
+    <!-- EXERCICE M2.1 : construire une chaîne horizontale entre ces deux boutons. -->
+    <Button android:id="@+id/careButton" android:layout_width="0dp" android:layout_height="wrap_content" android:minHeight="48dp"
+        android:text="@string/care_toast"
+        app:layout_constraintTop_toBottomOf="@id/nextButton" app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+    <Button android:id="@+id/snackButton" android:layout_width="0dp" android:layout_height="wrap_content" android:minHeight="48dp"
+        android:text="@string/care_snack"
+        app:layout_constraintTop_toBottomOf="@id/careButton" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" />
+    <androidx.constraintlayout.widget.Barrier android:id="@+id/careActionsBottom" android:layout_width="wrap_content" android:layout_height="wrap_content"
+        app:barrierDirection="bottom" app:constraint_referenced_ids="careButton,snackButton" />
+    <Button android:id="@+id/notificationButton" android:layout_width="0dp" android:layout_height="wrap_content" android:minHeight="48dp"
+        android:text="@string/demo_notification" app:layout_constraintTop_toBottomOf="@id/careActionsBottom"
+        app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" />
+    <Button android:id="@+id/workButton" android:layout_width="0dp" android:layout_height="wrap_content" android:minHeight="48dp"
+        android:text="@string/schedule_check" app:layout_constraintTop_toBottomOf="@id/notificationButton"
+        app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" />
+    <TextView android:id="@+id/workText" android:layout_width="0dp" android:layout_height="wrap_content" android:textSize="16sp"
+        android:text="@string/work_none" android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/workButton" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" />
+    <Button android:id="@+id/animalsButton" android:layout_width="0dp" android:layout_height="wrap_content" android:minHeight="48dp"
+        android:text="@string/animals_title" app:layout_constraintTop_toBottomOf="@id/workText"
+        app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" />
+    <Button android:id="@+id/aboutButton" android:layout_width="0dp" android:layout_height="wrap_content" android:minHeight="48dp"
+        android:text="@string/about_title" app:layout_constraintTop_toBottomOf="@id/animalsButton"
+        app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" />
+    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:textSize="14sp" android:text="@string/m2_notice"
+        app:layout_constraintTop_toBottomOf="@id/aboutButton" app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

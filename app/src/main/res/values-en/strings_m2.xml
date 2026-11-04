@@ -1,0 +1,26 @@
+<resources>
+    <string name="animals_title">Animals</string>
+    <string name="about_title">About PetCare</string>
+    <string name="home_title">Care log</string>
+    <string name="drawer_open">Open navigation</string>
+    <string name="drawer_close">Close navigation</string>
+    <string name="drawer_header">PetCare · Care log</string>
+    <string name="about_description">PetCare is a teaching care log for animals. Data is fictional and local. Care counts are session data, not database records.</string>
+    <string name="close_page">Back to care log</string>
+    <string name="show_animal_info">Show information about this animal</string>
+    <string name="animal_info_description">Show information about %1$s</string>
+    <string name="animal_information">Animal: %1$s
+Species: %2$s</string>
+    <string name="progress_value">%1$d / %2$d</string>
+    <string name="care_progress_description">Care actions recorded: %1$d. Session goal: %2$d.</string>
+    <string name="progress_pending">Care indicator to complete in module M2.</string>
+    <string name="m2_pending">M2 exercise %1$d: feature to complete.</string>
+    <string name="list_empty">No animals to display.</string>
+    <string name="list_pending">Connect the paged list in module M2.</string>
+    <string name="list_error">Loading failed. You can retry.</string>
+    <string name="retry">Retry</string>
+    <string name="row_pending">Row to complete</string>
+    <string name="m2_notice">Local demonstration. Care counts remain session data.</string>
+    <string name="about_pending">About screen to complete in module M2.</string>
+    <string name="progress_pending_short">To complete</string>
+</resources>

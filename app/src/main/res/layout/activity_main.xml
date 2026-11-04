@@ -1,33 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/root"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:padding="24dp">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="@string/app_name" android:textSize="28sp" android:layout_marginBottom="16dp" />
-        <TextView android:id="@+id/animalText" android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:textSize="22sp" android:layout_marginBottom="12dp" />
-        <TextView android:id="@+id/countText" android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:textSize="18sp" android:layout_marginBottom="12dp" />
-        <Button android:id="@+id/nextButton" android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:minHeight="48dp" android:text="@string/next_animal" />
-        <Button android:id="@+id/careButton" android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:minHeight="48dp" android:text="@string/care_toast" />
-        <Button android:id="@+id/snackButton" android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:minHeight="48dp" android:text="@string/care_snack" />
-        <Button android:id="@+id/notificationButton" android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:minHeight="48dp" android:text="@string/demo_notification" />
-        <Button android:id="@+id/workButton" android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:minHeight="48dp" android:text="@string/schedule_check" />
-        <TextView android:id="@+id/workText" android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="@string/work_none" android:textSize="16sp" android:layout_marginTop="16dp" />
-        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="@string/session_notice" android:textSize="14sp" android:layout_marginTop="16dp" />
-    </LinearLayout>
-</ScrollView>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/root"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/mainContent" android:layout_width="match_parent" android:layout_height="match_parent">
+        <com.google.android.material.appbar.MaterialToolbar android:id="@+id/toolbar"
+            android:layout_width="0dp" android:layout_height="wrap_content" android:minHeight="?attr/actionBarSize"
+            android:background="?attr/colorPrimary" app:titleTextColor="?attr/colorOnPrimary" app:title="@string/app_name"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent" />
+        <ScrollView android:id="@+id/homeScroll" android:layout_width="0dp" android:layout_height="0dp" android:fillViewport="true"
+            app:layout_constraintTop_toBottomOf="@id/toolbar" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent">
+            <include layout="@layout/content_home" />
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.navigation.NavigationView android:id="@+id/navigationView"
+        android:layout_width="280dp" android:layout_height="match_parent" android:layout_gravity="start"
+        android:fitsSystemWindows="true" app:headerLayout="@layout/drawer_header" app:menu="@menu/drawer_menu" />
+</androidx.drawerlayout.widget.DrawerLayout>

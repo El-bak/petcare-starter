@@ -1,0 +1,7 @@
+<resources>
+    <color name="petcare_m2_primary">#354A85</color>
+    <color name="petcare_m2_primary_variant">#23315B</color>
+    <color name="petcare_m2_on_primary">#FFFFFF</color>
+    <color name="petcare_m2_secondary">#6740A3</color>
+    <color name="petcare_m2_on_secondary">#FFFFFF</color>
+</resources>

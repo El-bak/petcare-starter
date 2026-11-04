@@ -4,6 +4,23 @@ import com.example.petcare.model.Animal
 import com.example.petcare.model.CompteurSoins
 import com.example.petcare.work.PetCareWorker
 import android.app.Notification
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.ImageButton
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import com.example.petcare.ui.AboutActivity
+import com.example.petcare.ui.AnimalListActivity
+import com.example.petcare.ui.CareProgressView
+import com.google.android.material.navigation.NavigationView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.color.MaterialColors
+import com.google.android.material.appbar.MaterialToolbar
+import com.example.petcare.data.DonneesAnimaux
+import android.app.Activity
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -30,11 +47,8 @@ import androidx.work.workDataOf
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
-    // EXERCICE 1 : données de démonstration, pas de saisie ni de persistance en M1.
-    private val animaux = listOf(
-        Animal(1L, "Nala", "cat"),
-        Animal(2L, "Oslo", "dog")
-    )
+    // Acquis M1 : ces fonctions restent corrigées au démarrage de M2.
+    private val animaux = DonneesAnimaux.animaux
     private var indexAnimal = 0
     private var animalDuRappel: Animal? = null
     private val animal: Animal get() = animaux[indexAnimal]
@@ -45,6 +59,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var animalText: TextView
     private lateinit var countText: TextView
     private lateinit var workText: TextView
+    private lateinit var drawer: DrawerLayout
+    private lateinit var drawerToggle: ActionBarDrawerToggle
+    private lateinit var progression: CareProgressView
+
+    // Infrastructure fournie : la liste peut renvoyer l’animal choisi au carnet.
+    private val choixAnimal = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { resultat ->
+        if (resultat.resultCode == Activity.RESULT_OK) {
+            val id = resultat.data?.getLongExtra(AnimalListActivity.EXTRA_ANIMAL_ID, -1L)
+            val index = animaux.indexOfFirst { it.id == id }
+            if (index >= 0) { indexAnimal = index; afficherAnimal() }
+        }
+    }
 
     private val permissionNotification = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -61,18 +87,32 @@ class MainActivity : AppCompatActivity() {
         animalText = findViewById(R.id.animalText)
         countText = findViewById(R.id.countText)
         workText = findViewById(R.id.workText)
+        progression = findViewById(R.id.careProgress)
+        restaurerSession(savedInstanceState)
+        installerNavigation()
+        findViewById<Button>(R.id.animalsButton).setOnClickListener { ouvrirAnimaux() }
+        findViewById<Button>(R.id.aboutButton).setOnClickListener { ouvrirPresentation() }
+        findViewById<ImageButton>(R.id.animalInfoButton).setOnClickListener {
+            val espece = getString(if (animal.especeCode == "cat") R.string.species_cat else R.string.species_dog)
+            MaterialAlertDialogBuilder(this).setTitle(animal.nom)
+                .setMessage(getString(R.string.animal_information, animal.nom, espece))
+                .setPositiveButton(android.R.string.ok, null).show()
+        }
+        Log.d("PetCareCycle", "onCreate saved=${savedInstanceState != null}")
 
         // Conserve les marges du XML et évite les barres système.
-        val left = root.paddingLeft
-        val top = root.paddingTop
-        val right = root.paddingRight
-        val bottom = root.paddingBottom
-        ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
+        // DrawerLayout gère ses enfants sans tenir compte de son propre padding.
+        val surface = findViewById<View>(R.id.mainContent)
+        val left = surface.paddingLeft
+        val top = surface.paddingTop
+        val right = surface.paddingRight
+        val bottom = surface.paddingBottom
+        ViewCompat.setOnApplyWindowInsetsListener(surface) { view, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.setPadding(left + bars.left, top + bars.top, right + bars.right, bottom + bars.bottom)
             insets
         }
-        ViewCompat.requestApplyInsets(root)
+        ViewCompat.requestApplyInsets(surface)
 
         findViewById<Button>(R.id.nextButton).setOnClickListener {
             indexAnimal = (indexAnimal + 1) % animaux.size
@@ -107,17 +147,26 @@ class MainActivity : AppCompatActivity() {
         animalText.text = getString(R.string.animal_summary, animal.nom, espece)
         val count = compteurs.nombre(animal.id)
         countText.text = resources.getQuantityString(R.plurals.care_count, count, count)
+        progression.setProgress(count)
+        configurerAccessibilite()
     }
 
     private fun confirmerAvecToast() {
-        // EXERCICE 2A : confirmer pour animal.id, rafraîchir, afficher un Toast avec care_done.
-        exerciceACompleter(2)
+        compteurs.confirmer(animal.id)
+        afficherAnimal()
+        Toast.makeText(this, getString(R.string.care_done, animal.nom), Toast.LENGTH_SHORT).show()
     }
 
     private fun confirmerAvecAnnulation() {
-        // EXERCICE 2B : capturer animal, confirmer et proposer Annuler dans un Snackbar.
-        // CompteurSoins.confirmer/annuler et afficherAnimal sont déjà fournis.
-        exerciceACompleter(2)
+        val animalConcerne = animal
+        compteurs.confirmer(animalConcerne.id)
+        afficherAnimal()
+        Snackbar.make(root, getString(R.string.care_done, animalConcerne.nom), Snackbar.LENGTH_LONG)
+            .setAction(R.string.undo) {
+                // Annule une seule confirmation du bon animal, même si la sélection change.
+                compteurs.annuler(animalConcerne.id)
+                afficherAnimal()
+            }.show()
     }
 
     private fun creerCanal() {
@@ -156,12 +205,15 @@ class MainActivity : AppCompatActivity() {
         if (notification != null) NotificationManagerCompat.from(this).notify(1001, notification)
     }
 
-    // EXERCICE 2 : contenu du rappel. Canal, permission et PendingIntent sont fournis.
+    // Acquis M1 : notification immédiate, indépendante du Worker.
     private fun construireRappel(animalConcerne: Animal): Notification? {
-        // EXERCICE 2C : retourner une notification construite avec les ressources du rappel.
-        // Utiliser intentionOuvrirApp() ; canal et permission sont déjà gérés.
-        exerciceACompleter(2)
-        return null // Aucun rappel tant que cette partie reste à compléter.
+        return NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_pet_notification)
+            .setContentTitle(getString(R.string.reminder_title))
+            .setContentText(getString(R.string.reminder_text, animalConcerne.nom))
+            .setContentIntent(intentionOuvrirApp())
+            .setAutoCancel(true)
+            .build()
     }
 
     private fun intentionOuvrirApp(): PendingIntent {
@@ -173,14 +225,92 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun programmerVerification() {
-        // EXERCICE 3 : créer une OneTimeWorkRequest<PetCareWorker> avec les deux entrées,
-        // puis l’envoyer avec WORK_NAME et ExistingWorkPolicy.KEEP.
-        exerciceACompleter(3)
+        val request = OneTimeWorkRequestBuilder<PetCareWorker>()
+            .setInputData(workDataOf(PetCareWorker.ANIMAL_ID to animal.id, PetCareWorker.ANIMAL_NAME to animal.nom))
+            .addTag("petcare-demo")
+            .build()
+        WorkManager.getInstance(this).enqueueUniqueWork(WORK_NAME, ExistingWorkPolicy.KEEP, request)
+        Toast.makeText(this, R.string.work_requested, Toast.LENGTH_SHORT).show()
     }
 
-    private fun exerciceACompleter(numero: Int) {
-        Toast.makeText(this, getString(R.string.exercise_pending, numero), Toast.LENGTH_SHORT).show()
+
+    private fun restaurerSession(etat: Bundle?) {
+        // EXERCICE M2.1 : restaurer la sélection et les compteurs depuis etat.
     }
+
+    private fun enregistrerSession(sortie: Bundle) {
+        // EXERCICE M2.1 : enregistrer la sélection et une copie des compteurs dans sortie.
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        enregistrerSession(outState)
+        super.onSaveInstanceState(outState)
+    }
+
+    private fun configurerAccessibilite() {
+        // EXERCICE M2.2 : titre accessible et description contextualisée du bouton information.
+    }
+
+    private fun installerNavigation() {
+        drawer = findViewById(R.id.root)
+        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        drawerToggle = ActionBarDrawerToggle(this, drawer, toolbar, R.string.drawer_open, R.string.drawer_close)
+        drawer.addDrawerListener(drawerToggle)
+        drawerToggle.syncState()
+        drawerToggle.drawerArrowDrawable.color = MaterialColors.getColor(toolbar, com.google.android.material.R.attr.colorOnPrimary)
+        findViewById<NavigationView>(R.id.navigationView).apply {
+            setCheckedItem(R.id.nav_home)
+            setNavigationItemSelectedListener { item ->
+                val traite = traiterDestination(item)
+                drawer.closeDrawer(GravityCompat.START)
+                traite
+            }
+        }
+        val retour = object : OnBackPressedCallback(false) {
+            override fun handleOnBackPressed() { drawer.closeDrawer(GravityCompat.START) }
+        }
+        onBackPressedDispatcher.addCallback(this, retour)
+        drawer.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+            override fun onDrawerOpened(drawerView: View) { retour.isEnabled = true }
+            override fun onDrawerClosed(drawerView: View) { retour.isEnabled = false }
+        })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
+        toolbar.overflowIcon?.mutate()?.setTint(MaterialColors.getColor(toolbar, com.google.android.material.R.attr.colorOnPrimary))
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        if (drawerToggle.onOptionsItemSelected(item) || traiterActionMenu(item)) true else super.onOptionsItemSelected(item)
+
+    private fun traiterActionMenu(item: MenuItem): Boolean {
+        // EXERCICE M2.4 : router chaque identifiant vers la destination prévue.
+        Toast.makeText(this, getString(R.string.m2_pending, 4), Toast.LENGTH_SHORT).show()
+        return false
+    }
+
+    private fun traiterDestination(item: MenuItem): Boolean {
+        // EXERCICE M2.4 : router chaque identifiant vers la destination prévue.
+        Toast.makeText(this, getString(R.string.m2_pending, 4), Toast.LENGTH_SHORT).show()
+        return false
+    }
+
+    private fun ouvrirAnimaux() { choixAnimal.launch(Intent(this, AnimalListActivity::class.java)) }
+    private fun ouvrirPresentation() { startActivity(Intent(this, AboutActivity::class.java)) }
+
+    override fun onStart() { super.onStart(); Log.d("PetCareCycle", "onStart") }
+    override fun onResume() {
+        super.onResume()
+        findViewById<NavigationView>(R.id.navigationView).setCheckedItem(R.id.nav_home)
+        Log.d("PetCareCycle", "onResume")
+    }
+    override fun onPause() { Log.d("PetCareCycle", "onPause"); super.onPause() }
+    override fun onStop() { Log.d("PetCareCycle", "onStop"); super.onStop() }
+    override fun onDestroy() { Log.d("PetCareCycle", "onDestroy"); super.onDestroy() }
 
     companion object {
         private const val CHANNEL_ID = "care_reminders"
