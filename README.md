@@ -4,7 +4,7 @@ PetCare est une application pédagogique de carnet de soins pour animaux. Vous p
 
 ## 1. Forker, cloner et ouvrir
 
-1. Ouvrez le dépôt **étudiant** indiqué par le formateur sur GitHub, puis cliquez sur **Fork**. Conservez le fork dans votre compte.
+1. Ouvrez le [dépôt étudiant PetCare](https://github.com/ZakyB/petcare-starter), puis cliquez sur **Fork**. Conservez le fork dans votre compte.
 2. Sur la page de votre fork, cliquez sur **Code** et copiez son URL HTTPS ou SSH. Clonez **votre fork**, pas le dépôt du formateur :
 
 ```powershell
