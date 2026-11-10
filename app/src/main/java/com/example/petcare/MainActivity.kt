@@ -188,7 +188,17 @@ class MainActivity : AppCompatActivity() {
     private fun programmerVerification() {
         // EXERCICE 3 : créer une OneTimeWorkRequest<PetCareWorker> avec les deux entrées,
         // puis l’envoyer avec WORK_NAME et ExistingWorkPolicy.KEEP.
-        exerciceACompleter(3)
+        val requete = OneTimeWorkRequestBuilder<PetCareWorker>()
+            .setInputData(workDataOf(
+                PetCareWorker.ANIMAL_ID to animal.id,
+                PetCareWorker.ANIMAL_NAME to animal.nom
+            ))
+            .addTag("petcare-demo")
+            .build()
+
+        WorkManager.getInstance(this).enqueueUniqueWork(WORK_NAME, ExistingWorkPolicy.KEEP, requete)
+
+        Toast.makeText(this, R.string.work_requested, Toast.LENGTH_SHORT).show()
     }
 
     private fun exerciceACompleter(numero: Int) {

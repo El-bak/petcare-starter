@@ -11,7 +11,18 @@ class PetCareWorker(context: Context, params: WorkerParameters) : Worker(context
     override fun doWork(): Result {
         // EXERCICE 3 : lire ANIMAL_ID et ANIMAL_NAME, valider, tracer et restituer les données.
         // Échec explicite tant que la vérification n’est pas implémentée.
-        return Result.failure()
+        val id = inputData.getLong(ANIMAL_ID, 0L)
+        val nom = inputData.getString(ANIMAL_NAME)
+
+        if (id <= 0L|| nom.isNullOrBlank()) {
+            return Result.failure()
+        }
+
+        Log.i("PetCareWork", "Vérification de $nom (id $id)")
+        return Result.success(workDataOf(
+            ANIMAL_ID to id,
+            ANIMAL_NAME to nom
+        ))
     }
 
     companion object {
