@@ -117,9 +117,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun confirmerAvecAnnulation() {
-        // EXERCICE 2B : capturer animal, confirmer et proposer Annuler dans un Snackbar.
-        // CompteurSoins.confirmer/annuler et afficherAnimal sont déjà fournis.
-        exerciceACompleter(2)
+        val animalConcerne = animal
+        compteurs.confirmer(animalConcerne.id)
+        afficherAnimal()
+        Snackbar.make(root, getString(R.string.care_done, animalConcerne.nom), Snackbar.LENGTH_LONG)
+            .setAction(R.string.undo) {
+                compteurs.annuler(animalConcerne.id)
+                afficherAnimal()
+            }
+            .show()
     }
 
     private fun creerCanal() {
