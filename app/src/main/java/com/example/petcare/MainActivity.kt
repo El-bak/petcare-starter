@@ -168,8 +168,13 @@ class MainActivity : AppCompatActivity() {
     private fun construireRappel(animalConcerne: Animal): Notification? {
         // EXERCICE 2C : retourner une notification construite avec les ressources du rappel.
         // Utiliser intentionOuvrirApp() ; canal et permission sont déjà gérés.
-        exerciceACompleter(2)
-        return null // Aucun rappel tant que cette partie reste à compléter.
+        return NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_pet_notification)
+            .setContentTitle(getString(R.string.reminder_title))
+            .setContentText(getString(R.string.reminder_text, animalConcerne.nom))
+            .setContentIntent(intentionOuvrirApp() )
+            .setAutoCancel(true)
+            .build()
     }
 
     private fun intentionOuvrirApp(): PendingIntent {
