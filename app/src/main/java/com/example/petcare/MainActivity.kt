@@ -32,8 +32,8 @@ import com.google.android.material.snackbar.Snackbar
 class MainActivity : AppCompatActivity() {
     // EXERCICE 1 : données de démonstration, pas de saisie ni de persistance en M1.
     private val animaux = listOf(
-        Animal(1L, "Nala", "cat"),
-        Animal(2L, "Oslo", "dog")
+        Animal(1L, "Alex", "cat"),
+        Animal(2L, "Marcel", "dog")
     )
     private var indexAnimal = 0
     private var animalDuRappel: Animal? = null
