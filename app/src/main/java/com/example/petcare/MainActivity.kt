@@ -111,7 +111,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun confirmerAvecToast() {
         // EXERCICE 2A : confirmer pour animal.id, rafraîchir, afficher un Toast avec care_done.
-        exerciceACompleter(2)
+        compteurs.confirmer(animal.id)
+        afficherAnimal()
+        Toast.makeText(this, getString(R.string.care_done, animal.nom), Toast.LENGTH_SHORT).show()
     }
 
     private fun confirmerAvecAnnulation() {
