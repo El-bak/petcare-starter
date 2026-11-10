@@ -7,11 +7,15 @@
     <string name="next_animal">Switch animal</string>
     <string name="care_toast">Record care with a Toast</string>
     <string name="care_snack">Record care with an undo action</string>
+    <string name="care_done">Care confirmed for %1$s</string>
+    <string name="undo">Undo</string>
     <string name="demo_notification">Show a demo reminder</string>
     <string name="notification_denied">Notifications denied. Other features remain available.</string>
     <string name="notifications_disabled">Notifications disabled in the app or channel settings.</string>
     <string name="channel_name">Care reminders</string>
     <string name="channel_description">PetCare demonstration notifications</string>
+    <string name="reminder_title">PetCare · Demo</string>
+    <string name="reminder_text">Check %1$s care log.</string>
     <string name="schedule_check">Schedule a simulated check</string>
     <string name="work_requested">Request submitted. Check the work status.</string>
     <string name="work_none">No work scheduled.</string>
