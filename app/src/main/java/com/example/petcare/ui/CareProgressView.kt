@@ -37,11 +37,37 @@ class CareProgressView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        // EXERCICE M2.2 : dessiner la piste, la progression et le texte avec Canvas/Paint.
-        paint.color = MaterialColors.getColor(this, com.google.android.material.R.attr.colorOnSurface)
+        val epaisseur = 12f * resources.displayMetrics.density   // 12 dp convertis en pixels
+
+        // 1. Le cercle : centré dans la View, en gardant la moitié du trait à l'intérieur
+        val cx = width / 2f
+        val cy = height / 2f
+        val rayon = minOf(width, height) / 2f - epaisseur / 2f
+        bounds.set(cx - rayon, cy - rayon, cx + rayon, cy + rayon)
+
+        // Couleurs du thème
+        val couleurPrincipale = MaterialColors.getColor(this, com.google.android.material.R.attr.colorPrimary)
+        val couleurTexte = MaterialColors.getColor(this, com.google.android.material.R.attr.colorOnSurface)
+
+        // 2. La piste : cercle complet, couleur principale très transparente
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = epaisseur
+        paint.color = ColorUtils.setAlphaComponent(couleurPrincipale, 60)
+        canvas.drawOval(bounds, paint)
+
+        // 3. La progression : un arc qui part du haut (-90°)
+        val fraction = (nombre.toFloat() / objectif).coerceIn(0f, 1f)
+        paint.color = couleurPrincipale
+        canvas.drawArc(bounds, -90f, 360f * fraction, false, paint)
+
+        // 4. Le texte centré
+        paint.style = Paint.Style.FILL
+        paint.color = couleurTexte
         paint.textAlign = Paint.Align.CENTER
         paint.textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 18f, resources.displayMetrics)
-        canvas.drawText(context.getString(R.string.progress_pending_short), width / 2f, height / 2f, paint)
+        val texte = context.getString(R.string.progress_value, nombre, objectif)
+        val y = cy - (paint.descent() + paint.ascent()) / 2f
+        canvas.drawText(texte, cx, y, paint)
     }
 
     override fun onInitializeAccessibilityNodeInfo(info: AccessibilityNodeInfo) {
