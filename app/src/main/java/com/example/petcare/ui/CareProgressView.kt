@@ -73,5 +73,15 @@ class CareProgressView @JvmOverloads constructor(
     override fun onInitializeAccessibilityNodeInfo(info: AccessibilityNodeInfo) {
         super.onInitializeAccessibilityNodeInfo(info)
         // EXERCICE M2.2 : exposer le rôle ProgressBar et une RangeInfo entière.
+        val compat = AccessibilityNodeInfoCompat.wrap(info)
+        // Rôle : TalkBack présente la View comme une barre de progression.
+        compat.className = "android.widget.ProgressBar"
+        // Plage entière de 0 à objectif, avec la valeur courante bornée.
+        compat.rangeInfo = AccessibilityNodeInfoCompat.RangeInfoCompat.obtain(
+            AccessibilityNodeInfoCompat.RangeInfoCompat.RANGE_TYPE_INT,
+            0f,
+            objectif.toFloat(),
+            nombre.coerceIn(0, objectif).toFloat()
+        )
     }
 }
