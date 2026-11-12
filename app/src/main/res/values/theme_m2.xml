@@ -1,4 +1,9 @@
 <resources>
-    <!-- EXERCICE M2.2 : relier les cinq attributs Material à colors_m2.xml. -->
-    <style name="Theme.PetCare.M2" parent="Theme.PetCare" />
+    <style name="Theme.PetCare.M2" parent="Theme.PetCare">
+        <item name="colorPrimary">@color/petcare_m2_primary</item>
+        <item name="colorPrimaryVariant">@color/petcare_m2_primary_variant</item>
+        <item name="colorOnPrimary">@color/petcare_m2_on_primary</item>
+        <item name="colorSecondary">@color/petcare_m2_secondary</item>
+        <item name="colorOnSecondary">@color/petcare_m2_on_secondary</item>
+    </style>
 </resources>
