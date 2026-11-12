@@ -236,10 +236,24 @@ class MainActivity : AppCompatActivity() {
 
     private fun restaurerSession(etat: Bundle?) {
         // EXERCICE M2.1 : restaurer la sélection et les compteurs depuis etat.
+        if (etat == null) return                        // premier lancement : rien à restaurer
+
+        val index = etat.getInt(CLE_INDEX, 0)
+        indexAnimal = if (index in animaux.indices) index else 0   // index hors limites → Nala
+
+        val ids = etat.getLongArray(CLE_IDS)
+        val valeurs = etat.getIntArray(CLE_VALEURS)
+        if (ids != null && valeurs != null && ids.size == valeurs.size) {
+            compteurs.restaurer(ids.indices.associate { i -> ids[i] to valeurs[i] })
+        }
     }
 
     private fun enregistrerSession(sortie: Bundle) {
         // EXERCICE M2.1 : enregistrer la sélection et une copie des compteurs dans sortie.
+        sortie.putInt(CLE_INDEX, indexAnimal)
+        val entrees = compteurs.snapshot().entries.toList()
+        sortie.putLongArray(CLE_IDS, entrees.map { it.key }.toLongArray())
+        sortie.putIntArray(CLE_VALEURS, entrees.map { it.value }.toIntArray())
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -315,6 +329,9 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val CHANNEL_ID = "care_reminders"
         // Une file globale : KEEP ignore une demande si la précédente est inachevée.
+        private const val CLE_INDEX = "session_index_animal"
+        private const val CLE_IDS = "session_ids"
+        private const val CLE_VALEURS = "session_valeurs"
         private const val WORK_NAME = "petcare-check"
     }
 }
