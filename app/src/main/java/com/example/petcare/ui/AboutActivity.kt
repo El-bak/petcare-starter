@@ -16,6 +16,6 @@ class AboutActivity : AppCompatActivity() {
 
     private fun afficherPresentation() {
         // EXERCICE M2.1 : remplacer cet écran d’attente par activity_about.
-        setContentView(R.layout.activity_pending)
+        setContentView(R.layout.activity_about)
     }
 }
