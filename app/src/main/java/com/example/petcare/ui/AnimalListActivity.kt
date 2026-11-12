@@ -58,7 +58,13 @@ class AnimalListActivity : AppCompatActivity() {
 
     private fun connecterListe() {
         // EXERCICE M2.3 : collecter pages pendant STARTED et soumettre au PagingDataAdapter.
-        findViewById<TextView>(R.id.listStatus).setText(R.string.list_pending)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                pages.collectLatest { donnees ->
+                    adapter.submitData(donnees)
+                }
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean { finish(); return true }

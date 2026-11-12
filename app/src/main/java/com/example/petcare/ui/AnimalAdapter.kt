@@ -16,10 +16,15 @@ class AnimalAdapter(private val choisir: (Animal) -> Unit) : PagingDataAdapter<A
         AnimalHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_animal, parent, false), choisir)
 
     override fun onBindViewHolder(holder: AnimalHolder, position: Int) {
-        // EXERCICE M2.3 : récupérer l’élément et déléguer à holder.afficher.
-        holder.itemView.findViewById<TextView>(R.id.nameText).setText(R.string.row_pending)
-        holder.itemView.findViewById<TextView>(R.id.speciesText).text = ""
-        holder.itemView.setOnClickListener(null)
+        val animal = getItem(position)
+        if (animal != null) {
+            holder.afficher(animal)
+        } else {
+            // Élément pas encore chargé : ligne neutre, non cliquable.
+            holder.itemView.findViewById<TextView>(R.id.nameText).setText(R.string.row_pending)
+            holder.itemView.findViewById<TextView>(R.id.speciesText).text = ""
+            holder.itemView.setOnClickListener(null)
+        }
     }
 
     class AnimalHolder(view: View, private val choisir: (Animal) -> Unit) : RecyclerView.ViewHolder(view) {
