@@ -307,16 +307,17 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         if (drawerToggle.onOptionsItemSelected(item) || traiterActionMenu(item)) true else super.onOptionsItemSelected(item)
 
-    private fun traiterActionMenu(item: MenuItem): Boolean {
-        // EXERCICE M2.4 : router chaque identifiant vers la destination prévue.
-        Toast.makeText(this, getString(R.string.m2_pending, 4), Toast.LENGTH_SHORT).show()
-        return false
+    private fun traiterActionMenu(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.action_animals -> { ouvrirAnimaux(); true }
+        R.id.action_about -> { ouvrirPresentation(); true }
+        else -> false
     }
 
-    private fun traiterDestination(item: MenuItem): Boolean {
-        // EXERCICE M2.4 : router chaque identifiant vers la destination prévue.
-        Toast.makeText(this, getString(R.string.m2_pending, 4), Toast.LENGTH_SHORT).show()
-        return false
+    private fun traiterDestination(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.nav_home -> true                      // on est déjà sur le carnet : rien à ouvrir
+        R.id.nav_animals -> { ouvrirAnimaux(); true }
+        R.id.nav_about -> { ouvrirPresentation(); true }
+        else -> false
     }
 
     private fun ouvrirAnimaux() { choixAnimal.launch(Intent(this, AnimalListActivity::class.java)) }
